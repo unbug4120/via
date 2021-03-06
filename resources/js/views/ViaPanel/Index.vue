@@ -2,14 +2,20 @@
   <div>
     <title-bar :title-stack="['Admin', 'Via']"/>
     <hero-bar>
-      Bán Via
-      <router-link to="/via/new" class="button" slot="right">
+      Quản lý Via
+      <router-link v-if="user.is_admin == 1" to="/via/new" class="button" slot="right">
         Rao bán
       </router-link>
     </hero-bar>
     <section class="section is-main-section">
       <card-component class="has-table has-mobile-sort-spaced" title="Bán Via" icon="account-multiple">
-
+        <card-toolbar v-if="user.is_admin == 1">
+          <button slot="right" type="button" class="button is-danger is-small has-checked-rows-number" @click="trashModal(null)" :disabled="!checkedRows.length">
+            <b-icon icon="trash-can" custom-size="default"/>
+            <span>Xóa tất cả</span>
+            <span v-show="!!checkedRows.length">({{ checkedRows.length }})</span>
+          </button>
+        </card-toolbar>
         <modal-box
           :is-active="isModalActive"
           :trash-object-name="trashSubject"
@@ -24,28 +30,22 @@
           :striped="true"
           :hoverable="true"
           default-sort="name"
-          :data="clients">
+          :data="via">
 
             <b-table-column label="UID" field="uid" v-slot="props">
-              {{ props.row.uid }}
+              <b style="color: #084B8A">{{ props.row.uid }}</b>
             </b-table-column>
-            <b-table-column label="Ngày tạo" field="created_date" v-slot="props">
-              {{ props.row.created_date }}
+            <b-table-column label="Năm" field="created_date" v-slot="props">
+              <b style="color: #A4A4A4">{{ props.row.created_date }}</b>
             </b-table-column>
             <b-table-column label="Quốc gia" field="country" sortable v-slot="props">
-              {{ props.row.country }}
-            </b-table-column>
-            <b-table-column label="Giá" field="cost" v-slot="props">
-              {{ formatPrice(props.row.cost) }}đ
+              <b style="color: #A4A4A4">{{ props.row.country }}</b>
             </b-table-column>
             <b-table-column custom-key="actions" class="is-actions-cell" v-slot="props">
-              <div class="buttons is-right">
-                <router-link :to="{name:'via.edit', params: {id: props.row.id}}" class="button is-small is-primary">
-                  <b-icon icon="account-edit" size="is-small"/>
+              <div class="buttons">
+                <router-link :to="{name:'via.info', params: {id: props.row.id}}" class="button is-small is-primary">
+                  <b-icon icon="eye" size="is-small"/>
                 </router-link>
-                <button class="button is-small is-danger" type="button" @click.prevent="trashModal(props.row)">
-                  <b-icon icon="trash-can" size="is-small"/>
-                </button>
               </div>
             </b-table-column>
 
@@ -87,10 +87,11 @@ export default {
     return {
       isModalActive: false,
       trashObject: null,
-      clients: [],
+      via: [],
+      user: [],
       isLoading: false,
       paginated: false,
-      perPage: 10,
+      perPage: 20,
       checkedRows: []
     }
   },
@@ -109,6 +110,7 @@ export default {
   },
   created () {
     this.getData()
+    this.getUser()
   },
   methods: {
     formatPrice(value) {
@@ -118,14 +120,36 @@ export default {
     getData () {
       this.isLoading = true
       axios
-        .get('/api/via')
+        .get('/api/viapanel')
         .then(r => {
           this.isLoading = false
           if (r.data && r.data.data) {
             if (r.data.data.length > this.perPage) {
               this.paginated = true
             }
-            this.clients = r.data.data
+            this.via = r.data.data
+          }
+        })
+        .catch( err => {
+          this.isLoading = false
+          this.$buefy.toast.open({
+            message: `Error: ${err.message}`,
+            type: 'is-danger',
+            queue: false
+          })
+        })
+    },
+    getUser () {
+      this.isLoading = true
+      axios
+        .get('/api/user')
+        .then(r => {
+          this.isLoading = false
+          if (r.data && r.data.data) {
+            if (r.data.data.length > this.perPage) {
+              this.paginated = true
+            }
+            this.user = r.data.data
           }
         })
         .catch( err => {
@@ -152,10 +176,10 @@ export default {
 
       if (this.trashObject) {
         method = 'delete'
-        url = `/api/clients/${this.trashObject.id}/destroy`
+        url = `/api/via/${this.trashObject.id}/destroy`
       } else if (this.checkedRows.length) {
         method = 'post'
-        url = '/api/clients/destroy'
+        url = '/api/via/destroy'
         data = {
           ids: map(this.checkedRows, row => row.id)
         }
@@ -172,7 +196,7 @@ export default {
         this.checkedRows = []
 
         this.$buefy.snackbar.open({
-          message: `Deleted`,
+          message: `Xóa thành công!`,
           queue: false
         })
       }).catch( err => {

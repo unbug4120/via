@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 use App\Models\Via;
 use App\Models\User;
-use Illuminate\Http\Request;
+use App\Models\ViaHistoryLog;
 
 class HomeController extends Controller
 {
@@ -31,9 +31,11 @@ class HomeController extends Controller
     {
         $via = Via::select('*')->where('status', 0)->count();
         $via_sell = Via::select('*')->where('status', 1)->count();
+        $via_history = ViaHistoryLog::select('*')->count();
         $user = User::select('*')->count();
         $home['via'] = $via;
         $home['via_sell'] = $via_sell;
+        $home['via_history'] = $via_history;
         $home['user'] = $user;
         return response()->json([
             'data' => $home

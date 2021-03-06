@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateViasTable extends Migration
+class CreateViaTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateViasTable extends Migration
      */
     public function up()
     {
-        Schema::create('vias', function (Blueprint $table) {
+        Schema::create('via', function (Blueprint $table) {
             $table->id();
             $table->string('uid')->nullable();
             $table->string('password')->nullable();

@@ -66,37 +66,25 @@
         </card-component>
         <card-component
           v-if="isProfileExists"
-          title="Client Profile"
+          title="Thông tin Via"
           icon="account"
           class="tile is-child"
         >
-          <user-avatar
-            :avatar="item.avatar"
-            :is-current-user="false"
-            class="image has-max-width is-aligned-center"
-          />
-          <hr />
-          <b-field label="Name">
-            <b-input :value="item.name" custom-class="is-static" readonly />
+          <b-field label="UID">
+            <b-input :value="item.uid" custom-class="is-static" readonly />
           </b-field>
-          <b-field label="Company">
-            <b-input :value="item.company" custom-class="is-static" readonly />
+          <b-field label="Mật khẩu">
+            <b-input :value="item.password" custom-class="is-static" readonly />
           </b-field>
-          <b-field label="City">
-            <b-input :value="item.city" custom-class="is-static" readonly />
+          <b-field label="Giá bán">
+            <b-input :value="item.cost" custom-class="is-static" readonly />
           </b-field>
-          <b-field label="Created">
-            <b-input :value="item.created" custom-class="is-static" readonly />
+          <b-field label="Quốc gia">
+            <b-input :value="item.country" custom-class="is-static" readonly />
           </b-field>
           <hr />
-          <b-field label="Progress">
-            <progress
-              class="progress is-small is-primary"
-              :value="item.progress"
-              max="100"
-            >
-              {{ item.progress }}
-            </progress>
+          <b-field label="Năm tạo Via">
+            <b-input :value="item.created_date" custom-class="is-static" readonly />
           </b-field>
         </card-component>
       </tiles>
@@ -111,13 +99,11 @@ import HeroBar from "@/components/HeroBar";
 import Tiles from "@/components/Tiles";
 import CardComponent from "@/components/CardComponent";
 import FilePicker from "@/components/FilePicker";
-import UserAvatar from "@/components/UserAvatar";
 import Notification from "@/components/Notification";
 
 export default {
   name: "ClientForm",
   components: {
-    UserAvatar,
     FilePicker,
     CardComponent,
     Tiles,
@@ -355,7 +341,7 @@ export default {
     },
     formCardTitle() {
       if (this.isProfileExists) {
-        return "Edit Client";
+        return "Sửa Via";
       } else {
         return "Thêm Via";
       }
@@ -381,12 +367,10 @@ export default {
     getData() {
       if (this.id) {
         axios
-          .get(`/clients/${this.id}`)
+          .get(`/api/via/${this.id}`)
           .then((r) => {
             this.form = r.data.data;
             this.item = clone(r.data.data);
-
-            this.form.created_date = new Date(r.data.data.created_mm_dd_yyyy);
           })
           .catch((e) => {
             this.item = null;
@@ -434,6 +418,7 @@ export default {
               message: "Đăng thành công!",
               queue: false,
             });
+            this.$router.push({ name: "via.index" });
           } else {
             this.item = r.data.data;
 

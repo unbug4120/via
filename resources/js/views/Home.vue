@@ -8,7 +8,7 @@
       <tiles>
         <card-widget class="tile is-child" type="is-primary" icon="account-multiple" :number="homes.user" label="Người dùng"/>
         <card-widget class="tile is-child" type="is-info" icon="cart-outline" :number="homes.via" label="Đang bán"/>
-        <card-widget class="tile is-child" type="is-success" icon="cart-outline" :number="homes.via_sell" label="Đã bán"/>
+        <card-widget class="tile is-child" type="is-success" icon="cart-outline" :number="homes.via_history" label="Đã bán"/>
       </tiles>
     </section>
   </div>
@@ -59,7 +59,7 @@ export default {
     getData () {
       this.isLoading = true
       axios
-        .get('home/get')
+        .get('api/home')
         .then(r => {
           this.isLoading = false
           if (r.data && r.data.data) {

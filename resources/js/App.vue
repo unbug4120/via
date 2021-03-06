@@ -36,21 +36,37 @@ export default {
             label: 'Bán Via',
             icon: 'bullhorn',
           },
+          // {
+          //   to: '/bm',
+          //   label: 'Bán BM',
+          //   icon: 'bullhorn',
+          // },
+        ],
+        '-- Cộng tác viên --',
+        [
           {
-            to: '/bm',
-            label: 'Bán BM',
-            icon: 'bullhorn',
+            to: '/user/rank',
+            label: 'Bảng xếp hạng',
+            icon: 'crown',
+          },
+        ],
+        '-- Quản lý --',
+        [
+          {
+            to: '/user/via',
+            label: 'Quản lý Via',
+            icon: 'settings',
           },
         ],
         '-- Tool --',
         [
           {
-            to: '/clients/index',
+            to: '/tool/hotmail/check',
             label: 'Check Hotmail',
             icon: 'checkbox-marked',
           },
           {
-            to: '/clients/index',
+            to: '/tool/facebook/check',
             label: 'Check Facebook',
             icon: 'checkbox-marked',
           },

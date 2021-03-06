@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateViasHistoryTable extends Migration
+class CreateViaHistoryLogTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,9 @@ class CreateViasHistoryTable extends Migration
      */
     public function up()
     {
-        Schema::create('vias_history', function (Blueprint $table) {
+        Schema::create('via_history_log', function (Blueprint $table) {
             $table->id();
-            $table->string('uid')->nullable();
+            $table->integer('via_id')->nullable();
             $table->integer('user_id')->nullable();
             $table->timestamps();
         });
@@ -28,6 +28,6 @@ class CreateViasHistoryTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('vias_history');
+        Schema::dropIfExists('via_history_log');
     }
 }

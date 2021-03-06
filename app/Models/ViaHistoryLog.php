@@ -5,19 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Via extends Model
+class ViaHistoryLog extends Model
 {
     use HasFactory;
 
-    protected $table = 'via';
-    
-    protected $fillable = [
-        'uid',
-        'country',
-        'password',
-        'cost',
-        'status',
-        'created_date',
-    ];
+    protected $table = 'via_history_log';
 
+    protected $fillable = [
+        'user_id',
+        'via_id',
+    ];
 }
